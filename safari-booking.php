@@ -103,9 +103,6 @@ class Safari_Booking{
 		include_once ('public/class-sb-shortcodes.php');
 		include_once ('public/class-sb-ajax.php');
 
-		// include_once ('admin/class-sb-admin.php');
-		// include_once ('admin/class-sb-booking-list.php');
-		// include_once ('admin/class-sb-settings.php');
 		if( is_admin() ){
 			include_once ('admin/class-settings-api.php');
 			include_once ('admin/class-safari-settings.php');
