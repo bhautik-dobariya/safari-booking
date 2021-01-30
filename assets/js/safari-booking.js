@@ -2,7 +2,7 @@
 
 	$(document).ready(function(){
 
-		$( ".Jungle-tab" ).tabs();
+		$( ".Jungle-tab" ).tabs().show();
 		
 		$("#gir-datepicker, #dev-datepicker").datepicker({
 			dateFormat: 'dd-mm-yy',
@@ -57,7 +57,7 @@
 				return false;
 			}
 
-			$('#gir-jungle-trail-tab').find('.error').text('').hide();
+			$('#gir-jungle-trail-tab').find('.avialbility-error').text('').hide();
 
 			$('#gir-jungle-trail-submit').prop('disabled', true);
 
@@ -89,7 +89,7 @@
 	            	if( response.success ){
 	            		$('#gir-jungle-trail-submit').prop('disabled', false);
 	            	}else{
-	            		$('#gir-jungle-trail-tab').find('.error').text(response.data.message).show();
+	            		$('#gir-jungle-trail-tab').find('.avialbility-error').text(response.data.message).show();
 	            		$('#gir-jungle-trail-submit').prop('disabled', true);
 	            	}
 	            	$this.closest('#gir-jungle-trail-form').waitMe('hide');
@@ -125,7 +125,7 @@
 				return false;
 			}
 
-			$('#devalia-park-tab').find('.error').text('').hide();
+			$('#devalia-park-tab').find('.avialbility-error').text('').hide();
 
 			$('#devalia-park-submit').prop('disabled', true);
 
@@ -157,7 +157,7 @@
 	            	if( response.success ){
 	            		$('#devalia-park-submit').prop('disabled', false);
 	            	}else{
-	            		$('#devalia-park-tab').find('.error').text(response.data.message).show();
+	            		$('#devalia-park-tab').find('.avialbility-error').text(response.data.message).show();
 	            		$('#devalia-park-submit').prop('disabled', true);
 	            	}
 	            	$this.closest('#devalia-park-form').waitMe('hide');
@@ -222,7 +222,7 @@
 		            	if( response.success ){
 
 		              		var razorpay_options = {
-						        key: 'rzp_test_N5A13aKGNaNYg8',
+						        key: safari_booking.safari_booking_basic_settings.razor_pay_key_id,
 						        amount: response.data.total_amount * 100,
 						        name: 'Gir Lion Safari Booking',
 						        description: 'Gir Lion Safari Booking',

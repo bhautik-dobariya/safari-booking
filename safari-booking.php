@@ -66,7 +66,7 @@ class Safari_Booking{
 			address text,
 			amount int(10),
 			payment_id varchar(200),
-			staus varchar(20),
+			status varchar(20),
 			PRIMARY KEY  (id)
 		) $charset_collate;";
 
@@ -99,13 +99,18 @@ class Safari_Booking{
 	public function includes() {
 
 		//public(frontend) files
+		include_once ('public/common-functions.php');
 		include_once ('public/class-sb-shortcodes.php');
 		include_once ('public/class-sb-ajax.php');
 
 		// include_once ('admin/class-sb-admin.php');
 		// include_once ('admin/class-sb-booking-list.php');
 		// include_once ('admin/class-sb-settings.php');
-
+		if( is_admin() ){
+			include_once ('admin/class-settings-api.php');
+			include_once ('admin/class-safari-settings.php');
+			include_once ('admin/class-sb-admin-ajax.php');
+		}
 	}
 
 	/**
@@ -114,12 +119,39 @@ class Safari_Booking{
 	 * @since 1.0
 	 */
 	private function init_hooks() {
-		add_action( 'init', array( $this, 'init' ), 0 );
+
+		$plugin = plugin_basename(__FILE__); 
+		add_filter("plugin_action_links_$plugin", array( $this, 'my_plugin_settings_link' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'safari_booking_enqueue_styles' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'safari_booking_enqueue_styles_admin' ) );
+		add_action( 'admin_menu', array( $this, 'add_safari_booking_menu' ) );
+
 	}
 
-	public function init(){
+	public function my_plugin_settings_link($links) { 
+	  	$settings_link = '<a href="options-general.php?page=safari_booking_settings">Settings</a>'; 
+	  	array_unshift($links, $settings_link); 
+	  	return $links; 
+	}
 
+	public function add_safari_booking_menu(){
+		add_menu_page('Safari Booking', 'Safari Booking', 'manage_options', 'safari-booking', array( $this, 'safari_booking_list' ) );
+	}
+
+	public function safari_settings(){
+		
+	}
+
+	public function safari_booking_list(){
+		
+		include_once ('admin/class-safari-booking-list.php');
+
+		// Create an instance of our package class.
+		$Safari_Booking_List = new Safari_Booking_List();
+
+		// Fetch, prepare, sort, and filter our data.
+		$Safari_Booking_List->prepare_items();
+		$Safari_Booking_List->display();
 	}
 
 	public function safari_booking_enqueue_styles() { 
@@ -145,11 +177,34 @@ class Safari_Booking{
 		// Localize the script with new data
 		$safari_booking = array(
 		    'ajaxurl' => admin_url('admin-ajax.php'),
+		    'safari_booking_basic_settings' => get_option( 'safari_booking_basic_settings' )
 		);
 		wp_localize_script( 'safari-booking-js', 'safari_booking', $safari_booking );
 		 
 		// Enqueued script with localized data.
 		wp_enqueue_script( 'safari-booking-js' );
+
+	}
+
+	public function safari_booking_enqueue_styles_admin() { 
+
+		//wp_enqueue_style( 'bootstrap-css', SB_PLUGIN_URL.'/assets/css/bootstrap.min.css', false, time() );
+		wp_enqueue_style( 'safari-booking-admin-css', SB_PLUGIN_URL.'/assets/css/safari-booking-admin.css', false, time() );
+		wp_enqueue_style( 'waitMe-min-css', SB_PLUGIN_URL.'/assets/css/waitMe.min.css', false, time() );
+
+	    wp_enqueue_script( 'waitMe-min-js', SB_PLUGIN_URL.'/assets/js/waitMe.min.js', array( 'jquery' ), time() );
+	    
+	    wp_register_script( 'safari-booking-admin-js', SB_PLUGIN_URL.'/assets/js/safari-booking-admin.js', array( 'jquery' ), time() );
+		 
+		// Localize the script with new data
+		$safari_booking = array(
+		    'ajaxurl' => admin_url('admin-ajax.php'),
+		    'safari_booking_basic_settings' => get_option( 'safari_booking_basic_settings' )
+		);
+		wp_localize_script( 'safari-booking-admin-js', 'safari_booking', $safari_booking );
+		 
+		// Enqueued script with localized data.
+		wp_enqueue_script( 'safari-booking-admin-js' );
 
 	}
 

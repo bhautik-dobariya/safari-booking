@@ -38,7 +38,7 @@ class SB_Ajax{
 		}
 		
 		wp_send_json_success(array(
-			'total_amount' => $this->calculate_price( $_POST['adult'], $_POST['child'] )
+			'total_amount' => calculate_price( $_POST['adult'], $_POST['child'] )
 		));
 
 	}
@@ -67,8 +67,11 @@ class SB_Ajax{
 		
 		try {
 
-			$keyId = 'rzp_test_N5A13aKGNaNYg8';
-			$keySecret = '5BtEceoqt3zU8FhwxDFlHVrN';
+			$safari_booking_basic_settings = get_option( 'safari_booking_basic_settings' );
+
+			$keyId = $safari_booking_basic_settings['razor_pay_key_id'];
+			$keySecret = $safari_booking_basic_settings['razor_pay_key_secret'];
+
 			include(SB_PLUGIN_DIR.'/razorpay-php/Razorpay.php');
 			$api = new Api($keyId, $keySecret);
 			
@@ -194,9 +197,8 @@ class SB_Ajax{
 			wp_send_json_success( array(
 				'redirect' => home_url('/'.$_POST['thankyou_url'].'?booking_code='.$booking_code)
 			) );
-		}
-		//catch exception
-		catch(Exception $e) {
+			
+		}catch(Exception $e) {
 			wp_send_json_error( array(
 				'message' => $e->getMessage()
 			) );
@@ -223,18 +225,44 @@ class SB_Ajax{
 
 	public function send_mail_to_customer( $data ){
 
+		add_filter( 'wp_mail_content_type', array( $this, 'girlionsafaribooking_set_html_mail_content_type' ) );
+
+		$to = $data['email'];
+		$subject = '';
+		$headers[] = 'From: girlionsafaribooking <girlionsafaribooking.com/>';
+
+		ob_start(); ?>
+
+		<?php $message = ob_get_clean();
+
+		wp_mail( $to, $subject, $message, $headers, array( '' ) );
+
+		remove_filter( 'wp_mail_content_type', array( $this, 'girlionsafaribooking_set_html_mail_content_type' ) );
+
 	}
 
 	public function send_mail_to_admin( $data ){
 
+		add_filter( 'wp_mail_content_type', array( $this, 'girlionsafaribooking_set_html_mail_content_type' ) );
+
+		$to = '';
+		$subject = '';
+		$headers[] = 'From: girlionsafaribooking <girlionsafaribooking.com/>';
+
+		ob_start(); ?>
+
+		<?php $message = ob_get_clean();
+
+		wp_mail( $to, $subject, $message, $headers, array( '' ) );
+
+		remove_filter( 'wp_mail_content_type', array( $this, 'girlionsafaribooking_set_html_mail_content_type' ) );
+
 	}
 
-
-	public function calculate_price( $adult, $child ){
-		$price = 0;
-		$price = 3600 + ( 100 * $child );
-		return $price;
+	public function girlionsafaribooking_set_html_mail_content_type() {
+	    return 'text/html';
 	}
+
 }
 
 new SB_Ajax();
