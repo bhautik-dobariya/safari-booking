@@ -235,12 +235,26 @@
 						            contact: $('input[name="mobile"]').val()
 						        },
 						        handler: function (transaction) {
-						        	console.log('handler called');
+						        	
 						        	var form = $('#payment_form')[0];
 							    	var formData = new FormData(form);
 							    		formData.append('action','add_safari_booking');
 							    		formData.append('razorpay_payment_id',transaction.razorpay_payment_id);
 							    		formData.append('total_amount',response.data.total_amount);
+
+							    		$this.closest('#payment_form').waitMe({
+											effect : 'bounce',
+											text : '',
+											bg : 'rgba(255,255,255,0.7)',
+											color : '#000000',
+											maxSize : '',
+											waitTime : -1,
+											textPos : 'vertical',
+											fontSize : '',
+											source : '',
+											onClose : function() {}
+										});
+
 
 							            $.ajax({
 							                url:safari_booking.ajaxurl,
@@ -250,7 +264,7 @@
 							                processData: false,
 		          							contentType: false,
 							                success: function (response) {
-							                    if(response){
+							                    if(response.success){
 							                        window.location = response.data.redirect;
 							                    }else{
 							                    	alert( response.data.message );
@@ -290,6 +304,8 @@
 						    // obj        
 						    var objrzpv1 = new Razorpay(razorpay_options);
 						    objrzpv1.open();
+		            	}else{
+		            		alert(response.data.message);
 		            	}
 
 		            	$this.closest('#payment_form').waitMe('hide');

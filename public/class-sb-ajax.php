@@ -61,7 +61,8 @@ class SB_Ajax{
 
 		if ( ! isset( $_POST['_wpnonce'] )  || ! wp_verify_nonce( $_POST['_wpnonce'] )  ) {
 			wp_send_json_error(array(
-				'message' => __( 'Sorry, Unauthorize aceess.', 'safari-booking' )
+				'message' => __( 'Sorry, Unauthorize aceess.', 'safari-booking' ),
+				'LINE' => __LINE__
 			));
 		}
 		
@@ -101,7 +102,7 @@ class SB_Ajax{
 					'address' => $_POST['address'],
 					'amount' => $_POST['total_amount'],
 					'payment_id' => $_POST['razorpay_payment_id'],
-					'staus' => 'success',
+					'status' => 'success',
 				);
 
 				$wpdb->insert( $table,$data );
@@ -191,16 +192,20 @@ class SB_Ajax{
 
 			}
 
-			$this->send_mail_to_customer( $_POST );
-			$this->send_mail_to_admin( $_POST );
+			$_POST['booking_code'] = $booking_code;
+
+			// $this->send_mail_to_customer( $_POST );
+			// $this->send_mail_to_admin( $_POST );
 
 			wp_send_json_success( array(
-				'redirect' => home_url('/'.$_POST['thankyou_url'].'?booking_code='.$booking_code)
+				'redirect' => $_POST['thankyou_url'].'?booking_code='.$booking_code,
+				'LINE' => __LINE__
 			) );
 			
 		}catch(Exception $e) {
 			wp_send_json_error( array(
-				'message' => $e->getMessage()
+				'message' => $e->getMessage(),
+				'LINE' => __LINE__
 			) );
 		}
 
@@ -225,15 +230,188 @@ class SB_Ajax{
 
 	public function send_mail_to_customer( $data ){
 
+		global $wpdb;
+
+		$upload_dir = wp_upload_dir();
+
 		add_filter( 'wp_mail_content_type', array( $this, 'girlionsafaribooking_set_html_mail_content_type' ) );
 
 		$to = $data['email'];
 		$subject = '';
 		$headers[] = 'From: girlionsafaribooking <girlionsafaribooking.com/>';
 
-		ob_start(); ?>
+		ob_start(); 
 
-		<?php $message = ob_get_clean();
+		$safari_booking_table = $wpdb->prefix . 'safari_booking';
+			
+		$booking = $wpdb->get_row( "
+			SELECT * FROM 
+				$safari_booking_table 
+			WHERE 
+				booking_code = '".$data['booking_code']."' 
+		",ARRAY_A );
+		
+		if( !empty( $booking ) ){ ?>
+			<table cellspacing="0" cellpadding="0" width="100%" style="margin: 0px auto; font-family: sans-serif; font-size: 15px; max-width: 580px;">
+				<tbody>
+					<!-- <tr>
+						<td cellspacing="0" align="center"><a href="#" ><img src="logo.png" style="margin-bottom: -3px;" ></a></td>
+					</tr> -->
+					<tr>
+						<td>
+							<table align="center" cellspacing="0" width="100%" style="background: #E09900; padding: 15px; border-radius: 15px 15px 0px 0px;" >
+								<tr>
+									<td align="center" style="color:#ffffff; font-size: 18px; " >Booking Details</td>
+								</tr>
+							</table>
+							
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table width="100%" style="background: #ffffff; padding: 15px; border: 1px solid #efefef; font-size: 13px;" >
+								<tbody>
+									<tr>
+										<td height=25><label style="font-weight: bold; padding-right: 15px;">Booking Code</label></td>
+										<td height=25><label style="font-weight: bold; padding-right: 15px;"><?php echo $booking['booking_code']; ?></label></td>
+									</tr>
+									<tr>
+										<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+									</tr>
+									<tr>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">Booking Date:</label> <value><?php echo date( 'd-m-Y', strtotime( $booking['booking_date'] ) ); ?></value></td>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">Booking Timing:</label> <value><?php echo $booking['booking_time']; ?></value></td>
+									</tr>
+									<tr>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">No. of Adult:</label> <value><?php echo $booking['no_of_adult']; ?></value></td>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">No. of Child:</label> <value><?php echo $booking['no_of_child']; ?></value></td>
+									</tr>
+									<tr>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">Name:</label> <value><?php echo $booking['name']; ?></value></td>
+									</tr>
+									<tr>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">Email:</label> <value><?php echo $booking['email']; ?></value></td>
+									</tr>
+									<tr>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">Mobile Number:</label> <value><?php echo $booking['mobile']; ?></value></td>
+									</tr>
+									<tr>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">Full Address:</label> <value><?php echo $booking['address']; ?></value></td>
+									</tr>
+									<tr>
+										<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+									</tr>
+									
+									<?php
+
+									$safari_booking_customers_table = $wpdb->prefix . 'safari_booking_customers';
+		
+									$booking_customers = $wpdb->get_results( "
+										SELECT * FROM 
+											$safari_booking_customers_table 
+										WHERE 
+											booking_id = '".$booking['id']."'
+										AND 
+											person_type = 'adult' 
+									",ARRAY_A );
+
+									if( !empty( $booking_customers ) ){
+
+										$i = 1;
+
+										foreach ( $booking_customers as $key => $booking_customers_adult ) { 
+											$proof_file = $upload_dir['baseurl'].'/safari_booking/'.$booking['id'].'/'.$booking_customers_adult['id'].'/'.$booking_customers_adult['proof_file'];
+											?>
+
+										<tr>
+											<td colspan="2" style="padding-bottom: 20px;" ><strong>Adult Details</strong></td>
+										</tr>
+										<tr>
+											<td height="25"><span style="font-weight: bold; padding-right: 15px;"><?php echo $i; ?></span><span>Adult</span></td>
+											<td height="25"><label style="font-weight: bold padding-right: 15px;"><?php echo $booking_customers_adult['name']; ?></label><span></span></td>
+										</tr>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Age:</label><span><?php echo $booking_customers_adult['age']; ?></span></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Gender:</label><span><?php echo $booking_customers_adult['gender']; ?></span></td>
+										</tr>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Nationality:</label><span><?php echo $booking_customers_adult['nationality']; ?></span></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Select State:</label><span><?php echo $booking_customers_adult['state']; ?></span></td>
+										</tr>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof:</label><span><?php echo $booking_customers_adult['id_proof']; ?></span></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof Number:</label><span><?php echo $booking_customers_adult['id_proof_number']; ?></span></td>
+										</tr>
+										<tr>
+											<td colspan="2"><label style="font-weight: bold; padding-right: 15px;">ID Proof Photo:</label><img src="<?php echo $proof_file; ?>" style="width: 100px;display: block;"></td>
+										</tr>
+
+									<?php $i++; } } ?>
+
+									<tr>
+										<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+									</tr>
+
+									<?php
+
+									$safari_booking_customers_table = $wpdb->prefix . 'safari_booking_customers';
+		
+									$booking_customers = $wpdb->get_results( "
+										SELECT * FROM 
+											$safari_booking_customers_table 
+										WHERE 
+											booking_id = '".$booking['id']."'
+										AND 
+											person_type = 'child' 
+									",ARRAY_A );
+
+									if( !empty( $booking_customers ) ){
+
+										$i = 1;
+
+										foreach ( $booking_customers as $key => $booking_customers_child ) { ?>
+
+										<tr>
+											<td colspan="2" style="padding-bottom: 20px;" ><strong>Child Details</strong></td>
+										</tr>
+										<tr>
+											<td height="25"><span style="font-weight: bold; padding-right: 15px;"><?php echo $i; ?></span><span>Child</span></td>
+											<td height="25"><label style="font-weight: bold padding-right: 15px;"><?php echo $booking_customers_child['name']; ?></label><span></span></td>
+										</tr>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Age:</label><span><?php echo $booking_customers_child['age']; ?></span></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Gender:</label><span><?php echo $booking_customers_child['gender']; ?></span></td>
+										</tr>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Nationality:</label><span><?php echo $booking_customers_child['nationality']; ?></span></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Select State:</label><span><?php echo $booking_customers_child['state']; ?></span></td>
+										</tr>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof:</label><span><?php echo $booking_customers_child['id_proof']; ?></span></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof Number:</label><span><?php echo $booking_customers_child['id_proof_number']; ?></span></td>
+										</tr>
+
+									<?php $i++; } } ?>
+
+									<tr>
+										<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+									</tr>
+
+									<tr>
+										<td height=25><label style="font-weight: bold; padding-right: 15px;">Total:</label></td>
+										<td height=25><label style="font-weight: bold; padding-right: 15px;">₹<?php echo $booking['amount']; ?></label></td>
+									</tr>
+
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<?php
+		}
+
+		$message = ob_get_clean();
 
 		wp_mail( $to, $subject, $message, $headers, array( '' ) );
 
@@ -243,15 +421,188 @@ class SB_Ajax{
 
 	public function send_mail_to_admin( $data ){
 
+		global $wpdb;
+
+		$upload_dir = wp_upload_dir();
+
 		add_filter( 'wp_mail_content_type', array( $this, 'girlionsafaribooking_set_html_mail_content_type' ) );
 
-		$to = '';
+		$to = 'hosting.miracletechnolabs@gmail.com';
 		$subject = '';
 		$headers[] = 'From: girlionsafaribooking <girlionsafaribooking.com/>';
 
-		ob_start(); ?>
+		ob_start(); 
 
-		<?php $message = ob_get_clean();
+		$safari_booking_table = $wpdb->prefix . 'safari_booking';
+			
+		$booking = $wpdb->get_row( "
+			SELECT * FROM 
+				$safari_booking_table 
+			WHERE 
+				booking_code = '".$data['booking_code']."' 
+		",ARRAY_A );
+		
+		if( !empty( $booking ) ){ ?>
+			<table cellspacing="0" cellpadding="0" width="100%" style="margin: 0px auto; font-family: sans-serif; font-size: 15px; max-width: 580px;">
+				<tbody>
+					<!-- <tr>
+						<td cellspacing="0" align="center"><a href="#" ><img src="logo.png" style="margin-bottom: -3px;" ></a></td>
+					</tr> -->
+					<tr>
+						<td>
+							<table align="center" cellspacing="0" width="100%" style="background: #E09900; padding: 15px; border-radius: 15px 15px 0px 0px;" >
+								<tr>
+									<td align="center" style="color:#ffffff; font-size: 18px; " >Booking Details</td>
+								</tr>
+							</table>
+							
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table width="100%" style="background: #ffffff; padding: 15px; border: 1px solid #efefef; font-size: 13px;" >
+								<tbody>
+									<tr>
+										<td height=25><label style="font-weight: bold; padding-right: 15px;">Booking Code</label></td>
+										<td height=25><label style="font-weight: bold; padding-right: 15px;"><?php echo $booking['booking_code']; ?></label></td>
+									</tr>
+									<tr>
+										<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+									</tr>
+									<tr>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">Booking Date:</label> <value><?php echo date( 'd-m-Y', strtotime( $booking['booking_date'] ) ); ?></value></td>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">Booking Timing:</label> <value><?php echo $booking['booking_time']; ?></value></td>
+									</tr>
+									<tr>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">No. of Adult:</label> <value><?php echo $booking['no_of_adult']; ?></value></td>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">No. of Child:</label> <value><?php echo $booking['no_of_child']; ?></value></td>
+									</tr>
+									<tr>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">Name:</label> <value><?php echo $booking['name']; ?></value></td>
+									</tr>
+									<tr>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">Email:</label> <value><?php echo $booking['email']; ?></value></td>
+									</tr>
+									<tr>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">Mobile Number:</label> <value><?php echo $booking['mobile']; ?></value></td>
+									</tr>
+									<tr>
+										<td height="25"><label style="font-weight: bold; padding-right: 15px;">Full Address:</label> <value><?php echo $booking['address']; ?></value></td>
+									</tr>
+									<tr>
+										<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+									</tr>
+									
+									<?php
+
+									$safari_booking_customers_table = $wpdb->prefix . 'safari_booking_customers';
+		
+									$booking_customers = $wpdb->get_results( "
+										SELECT * FROM 
+											$safari_booking_customers_table 
+										WHERE 
+											booking_id = '".$booking['id']."'
+										AND 
+											person_type = 'adult' 
+									",ARRAY_A );
+
+									if( !empty( $booking_customers ) ){
+
+										$i = 1;
+
+										foreach ( $booking_customers as $key => $booking_customers_adult ) { 
+											$proof_file = $upload_dir['baseurl'].'/safari_booking/'.$booking['id'].'/'.$booking_customers_adult['id'].'/'.$booking_customers_adult['proof_file'];
+											?>
+
+										<tr>
+											<td colspan="2" style="padding-bottom: 20px;" ><strong>Adult Details</strong></td>
+										</tr>
+										<tr>
+											<td height="25"><span style="font-weight: bold; padding-right: 15px;"><?php echo $i; ?></span><span>Adult</span></td>
+											<td height="25"><label style="font-weight: bold padding-right: 15px;"><?php echo $booking_customers_adult['name']; ?></label><span></span></td>
+										</tr>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Age:</label><span><?php echo $booking_customers_adult['age']; ?></span></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Gender:</label><span><?php echo $booking_customers_adult['gender']; ?></span></td>
+										</tr>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Nationality:</label><span><?php echo $booking_customers_adult['nationality']; ?></span></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Select State:</label><span><?php echo $booking_customers_adult['state']; ?></span></td>
+										</tr>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof:</label><span><?php echo $booking_customers_adult['id_proof']; ?></span></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof Number:</label><span><?php echo $booking_customers_adult['id_proof_number']; ?></span></td>
+										</tr>
+										<tr>
+											<td colspan="2"><label style="font-weight: bold; padding-right: 15px;">ID Proof Photo:</label><img src="<?php echo $proof_file; ?>" style="width: 100px;display: block;"></td>
+										</tr>
+
+									<?php $i++; } } ?>
+
+									<tr>
+										<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+									</tr>
+
+									<?php
+
+									$safari_booking_customers_table = $wpdb->prefix . 'safari_booking_customers';
+		
+									$booking_customers = $wpdb->get_results( "
+										SELECT * FROM 
+											$safari_booking_customers_table 
+										WHERE 
+											booking_id = '".$booking['id']."'
+										AND 
+											person_type = 'child' 
+									",ARRAY_A );
+
+									if( !empty( $booking_customers ) ){
+
+										$i = 1;
+
+										foreach ( $booking_customers as $key => $booking_customers_child ) { ?>
+
+										<tr>
+											<td colspan="2" style="padding-bottom: 20px;" ><strong>Child Details</strong></td>
+										</tr>
+										<tr>
+											<td height="25"><span style="font-weight: bold; padding-right: 15px;"><?php echo $i; ?></span><span>Child</span></td>
+											<td height="25"><label style="font-weight: bold padding-right: 15px;"><?php echo $booking_customers_child['name']; ?></label><span></span></td>
+										</tr>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Age:</label><span><?php echo $booking_customers_child['age']; ?></span></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Gender:</label><span><?php echo $booking_customers_child['gender']; ?></span></td>
+										</tr>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Nationality:</label><span><?php echo $booking_customers_child['nationality']; ?></span></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Select State:</label><span><?php echo $booking_customers_child['state']; ?></span></td>
+										</tr>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof:</label><span><?php echo $booking_customers_child['id_proof']; ?></span></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof Number:</label><span><?php echo $booking_customers_child['id_proof_number']; ?></span></td>
+										</tr>
+
+									<?php $i++; } } ?>
+
+									<tr>
+										<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+									</tr>
+
+									<tr>
+										<td height=25><label style="font-weight: bold; padding-right: 15px;">Total:</label></td>
+										<td height=25><label style="font-weight: bold; padding-right: 15px;">₹<?php echo $booking['amount']; ?></label></td>
+									</tr>
+
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<?php
+		}
+
+		$message = ob_get_clean();
 
 		wp_mail( $to, $subject, $message, $headers, array( '' ) );
 

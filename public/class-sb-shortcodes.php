@@ -1,5 +1,4 @@
 <?php
-
 /**
  * SB_Shortcodes
  */
@@ -14,15 +13,12 @@ class SB_Shortcodes{
 	public function booking_form( $atts ) {
 		
 		$safari_booking_basic_settings = get_option( 'safari_booking_basic_settings' );
-
 		$payment_form_url = get_permalink( $safari_booking_basic_settings['payment_page'] );
-
 	    $atts = shortcode_atts( array(
 	        '' => '',
 	    ), $atts, 'booking_form' );
 	 	
 	    ob_start();
-
 	    ?>
 	    <div class="Jungle-tab" style="display: none;">
 	      	<ul class="nav nav-tabs tigertabs">
@@ -147,28 +143,23 @@ class SB_Shortcodes{
 	    </div>
 	    <?php
 	    $html = ob_get_clean();
-
 	    return $html;
 	}
 
 	public function payment_form( $atts ) {
-
 		$safari_booking_basic_settings = get_option( 'safari_booking_basic_settings' );
-
 		$thank_you_page_url = get_permalink( $safari_booking_basic_settings['thank_you_page'] );
-
 	    $atts = shortcode_atts( array(
 	        'thankyou_url' => '',
 	    ), $atts, 'payment_form' );
 	 	
 	    ob_start();
-
 	    ?>
 	    <div class="booking">
 		    <div class="container">
 		        <h1>
 		        	<?php 
-		        		if( $_GET['booking_type'] == 'gir-jungle-trail' ){
+		        		if( isset( $_GET['type'] ) &&  $_GET['type'] == 'gir-jungle-trail' ){
 				        	echo  "Gir Jungle Trail Booking";
 				        }else{
 				        	echo "Devalia Park Safari Booking";
@@ -188,7 +179,7 @@ class SB_Shortcodes{
 		                                    <input type="hidden" name="time" value="<?php echo $_GET['time']; ?>">
 		                                    <input type="hidden" name="adult" value="<?php echo $_GET['adult']; ?>">
 		                                    <input type="hidden" name="child" value="<?php echo $_GET['child']; ?>">
-		                                    <input type="hidden" name="type" value="<?php echo $_GET['booking_type']; ?>">
+		                                    <input type="hidden" name="type" value="<?php echo $_GET['type']; ?>">
 		                                    <label for="bookingdate">Booking Date : </label>
 		                                    <span><?php echo $_GET['date']; ?></span>
 		                                </div>
@@ -256,27 +247,27 @@ class SB_Shortcodes{
 		                                    	<h5>Adult Details:</h5>
 		                                    	<?php for ( $adult = 0; $adult < $_GET['adult']; $adult++) { ?>
 			                                    	<div class="adult-row">
-				                                        <div class="form-group">
+				                                        <div class="form-group number">
 				                                            <span><?php echo $adult+1; ?></span>
 				                                        </div>
-				                                        <div class="form-group">
+				                                        <div class="form-group adult-heading">
 				                                            Adult
 				                                        </div>
-				                                        <div class="form-group">
+				                                        <div class="form-group adult-name">
 				                                            <input type="text" class="form-control" name="adults[<?php echo $adult; ?>][name]" placeholder="Full Name" required="">
 				                                        </div>
-				                                        <div class="form-group">
+				                                        <div class="form-group adult-age">
 				                                            <!-- <input type="number" min="13" max="64" maxlength="3" class="form-control age1" name="age[]" placeholder="Age" required> -->
 				                                            <input type="number" maxlength="3" class="form-control age1" name="adults[<?php echo $adult; ?>][age]" placeholder="Age" required="">
 				                                        </div>
-				                                        <div class="form-group">
+				                                        <div class="form-group adult-gender">
 				                                            <select class="form-control gender1" name="adults[<?php echo $adult; ?>][gender]" required="">
 				                                                <option value="">Gender</option>
 				                                                <option value="Male">Male</option>
 				                                                <option value="Female">Female</option>
 				                                            </select>
 				                                        </div>
-				                                        <div class="form-group">
+				                                        <div class="form-group adult-nationality">
 				                                            <select class="form-control nationality_select nationality_select_field nationality_div" name="adults[<?php echo $adult; ?>][nationality]" required="">
 				                                                <option value="">Nationality</option>
 				                                                <option value="Indian">Indian</option>
@@ -566,7 +557,7 @@ class SB_Shortcodes{
 				                                                </select>
 				                                            </div>
 				                                        </div>
-				                                        <div class="form-group">
+				                                        <div class="form-group adult-id">
 				                                            <select class="form-control nationality_div" name="adults[<?php echo $adult; ?>][id_proof]" required="">
 				                                                <option value="">ID Proof</option>
 				                                                <option value="Aadhar Card">Aadhar Card</option>
@@ -578,7 +569,7 @@ class SB_Shortcodes{
 				                                                <input type="text" class="form-control" name="adults[<?php echo $adult; ?>][idnumber]" placeholder="Id Proof Number" required="">	
 				                                            </div>
 				                                        </div>
-				                                        <div class="form-group upload">
+				                                        <div class="form-group adult-id-file upload">
 				                                            <input type="file" title="This field is required. and the image Format Must Be JPG, JPEG, PNG and Maximum File Size Limit is 3MB." class="form-control idprooffile" required="required" accept=".png, .jpg, .jpeg" name="adults[<?php echo $adult; ?>]">
 				                                            <div id="Div1">Upload (.jpg/.jpeg/.png) only. <br>size should be less then 8 MB </div>
 				                                            <div class="alert" id="message" style="display: none"></div>
@@ -593,26 +584,26 @@ class SB_Shortcodes{
 			                                        <h5>Child Details:</h5>
 			                                        <?php for ( $child = 0; $child < $_GET['child']; $child++) { ?>
 				                                        <div class="child-row">
-				                                            <div class="form-group child-span">
+				                                            <div class="form-group child-span number">
 				                                                <span><?php echo $child+1; ?></span>
 				                                            </div>
-				                                            <div class="form-group child-span">
+				                                            <div class="form-group child-span adult-heading">
 				                                                Child
 				                                            </div>
-				                                            <div class="form-group">
+				                                            <div class="form-group adult-name">
 				                                                <input type="text" class="form-control" name="childs[<?php echo $child; ?>][name]" placeholder="Enter Full Name" required="">
 				                                            </div>
-				                                            <div class="form-group">
+				                                            <div class="form-group adult-age">
 				                                                <input type="number" min="1" max="12" maxlength="2" class="form-control age2" name="childs[<?php echo $child; ?>][age]" placeholder="Age" required="">
 				                                            </div>
-				                                            <div class="form-group">
+				                                            <div class="form-group adult-gender">
 				                                                <select class="form-control gender2" name="childs[<?php echo $child; ?>][gender]" required="">
 				                                                    <option value="">Gender</option>
 				                                                    <option value="Male">Male</option>
 				                                                    <option value="Female">Female</option>
 				                                                </select>
 				                                            </div>
-				                                            <div class="form-group">
+				                                            <div class="form-group adult-nationality">
 				                                                <select class="form-control nationality_select nationality_select_field nationality_div" name="childs[<?php echo $child; ?>][nationality]" required="">
 				                                                    <option value="">Nationality</option>
 				                                                    <option value="Indian">Indian</option>
@@ -902,7 +893,7 @@ class SB_Shortcodes{
 				                                                    </select>
 				                                                </div>
 				                                            </div>
-				                                            <div class="form-group">
+				                                            <div class="form-group adult-id">
 				                                                <select class="form-control nationality_div" name="childs[<?php echo $child; ?>][id_proof]" required="">
 				                                                    <option value="">ID Proof</option>
 				                                                    <option value="Aadhar Card">Aadhar Card</option>
@@ -927,14 +918,14 @@ class SB_Shortcodes{
 		                                    </div>
 		                                    <div class="payment-button">
 		                                        <ul class="list-inline">
-		                                            <li><a href="#" onclick="return false;" class="btn btn-warning">Payable amount : <span id="lblTotal"><?php echo calculate_price( $_GET['adult'], $_GET['child'] ); ?></span>
+		                                            <li><a href="#" onclick="return false;" class="btn btn-warning">Payable amount : <span id="lblTotal">₹<?php echo calculate_price( $_GET['adult'], $_GET['child'] ); ?></span>
 		                                                </a>
 		                                                <input type="hidden" name="total_amount" value="<?php echo calculate_price( $_GET['adult'], $_GET['child'] ); ?>" id="total_amount">
 		                                                <input type="hidden" name="thankyou_url" value="<?php echo $thank_you_page_url; ?>" id="thankyou_url">
 		                                            </li>
 		                                            <li> 
 		                                            	<?php wp_nonce_field(); ?>
-		                                            	<button type="submit" id="pay-now" class="btn btn-success">Pay Now</button>
+		                                            	<button type="submit" id="pay-now" class="btn btn-success" style="cursor: pointer;">Pay Now</button>
 		                                            </li>
 		                                            <li><a href="<?php echo home_url(); ?>" class="btn btn-info">Go Back</a></li>
 		                                        </ul>
@@ -949,24 +940,23 @@ class SB_Shortcodes{
 		    </div>
 		</div>
 	    <?php
-
 	    $html = ob_get_clean();
-
 	    return $html;
 	}
-
 	public function booking_thank_you( $atts ){
 
 		global $wpdb;
+
+		$upload_dir = wp_upload_dir();
 
 		$atts = shortcode_atts( array(
 	        '' => '',
 	    ), $atts, 'booking_thank_you' );
 	 	
-	    ob_start(); 
+		$html = '';
 
 	    if( isset( $_GET['booking_code'] ) && $_GET['booking_code'] != '' ){
-
+			
 			$safari_booking_table = $wpdb->prefix . 'safari_booking';
 			
 			$booking = $wpdb->get_row( "
@@ -974,18 +964,178 @@ class SB_Shortcodes{
 					$safari_booking_table 
 				WHERE 
 					booking_code = '".$_GET['booking_code']."' 
-			" );
-
+			",ARRAY_A );
+			
 			if( !empty( $booking ) ){
 
+			    ob_start(); 
+
+				?>
+				<table cellspacing="0" cellpadding="0" width="100%" style="margin: 0px auto; font-family: sans-serif; font-size: 15px; max-width: 580px;">
+					<tbody>
+						<!-- <tr>
+							<td cellspacing="0" align="center"><a href="#" ><img src="logo.png" style="margin-bottom: -3px;" ></a></td>
+						</tr> -->
+						<tr>
+							<td>
+								<table align="center" cellspacing="0" width="100%" style="background: #E09900; padding: 15px; border-radius: 15px 15px 0px 0px;" >
+									<tr>
+										<td align="center" style="color:#ffffff; font-size: 18px; " >Booking Details</td>
+									</tr>
+								</table>
+								
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table width="100%" style="background: #ffffff; padding: 15px; border: 1px solid #efefef; font-size: 13px;" >
+									<tbody>
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Booking Code</label></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;"><?php echo $booking['booking_code']; ?></label></td>
+										</tr>
+										<tr>
+											<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+										</tr>
+										<tr>
+											<td height="25"><label style="font-weight: bold; padding-right: 15px;">Booking Date:</label> <value><?php echo date( 'd-m-Y', strtotime( $booking['booking_date'] ) ); ?></value></td>
+											<td height="25"><label style="font-weight: bold; padding-right: 15px;">Booking Timing:</label> <value><?php echo $booking['booking_time']; ?></value></td>
+										</tr>
+										<tr>
+											<td height="25"><label style="font-weight: bold; padding-right: 15px;">No. of Adult:</label> <value><?php echo $booking['no_of_adult']; ?></value></td>
+											<td height="25"><label style="font-weight: bold; padding-right: 15px;">No. of Child:</label> <value><?php echo $booking['no_of_child']; ?></value></td>
+										</tr>
+										<tr>
+											<td height="25"><label style="font-weight: bold; padding-right: 15px;">Name:</label> <value><?php echo $booking['name']; ?></value></td>
+										</tr>
+										<tr>
+											<td height="25"><label style="font-weight: bold; padding-right: 15px;">Email:</label> <value><?php echo $booking['email']; ?></value></td>
+										</tr>
+										<tr>
+											<td height="25"><label style="font-weight: bold; padding-right: 15px;">Mobile Number:</label> <value><?php echo $booking['mobile']; ?></value></td>
+										</tr>
+										<tr>
+											<td height="25"><label style="font-weight: bold; padding-right: 15px;">Full Address:</label> <value><?php echo $booking['address']; ?></value></td>
+										</tr>
+										<tr>
+											<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+										</tr>
+										
+										<?php
+
+										$safari_booking_customers_table = $wpdb->prefix . 'safari_booking_customers';
+			
+										$booking_customers = $wpdb->get_results( "
+											SELECT * FROM 
+												$safari_booking_customers_table 
+											WHERE 
+												booking_id = '".$booking['id']."'
+											AND 
+												person_type = 'adult' 
+										",ARRAY_A );
+
+										if( !empty( $booking_customers ) ){
+
+											$i = 1;
+
+											foreach ( $booking_customers as $key => $booking_customers_adult ) { 
+												$proof_file = $upload_dir['baseurl'].'/safari_booking/'.$booking['id'].'/'.$booking_customers_adult['id'].'/'.$booking_customers_adult['proof_file'];
+												?>
+
+											<tr>
+												<td colspan="2" style="padding-bottom: 20px;" ><strong>Adult Details</strong></td>
+											</tr>
+											<tr>
+												<td height="25"><span style="font-weight: bold; padding-right: 15px;"><?php echo $i; ?></span><span>Adult</span></td>
+												<td height="25"><label style="font-weight: bold padding-right: 15px;"><?php echo $booking_customers_adult['name']; ?></label><span></span></td>
+											</tr>
+											<tr>
+												<td height=25><label style="font-weight: bold; padding-right: 15px;">Age:</label><span><?php echo $booking_customers_adult['age']; ?></span></td>
+												<td height=25><label style="font-weight: bold; padding-right: 15px;">Gender:</label><span><?php echo $booking_customers_adult['gender']; ?></span></td>
+											</tr>
+											<tr>
+												<td height=25><label style="font-weight: bold; padding-right: 15px;">Nationality:</label><span><?php echo $booking_customers_adult['nationality']; ?></span></td>
+												<td height=25><label style="font-weight: bold; padding-right: 15px;">Select State:</label><span><?php echo $booking_customers_adult['state']; ?></span></td>
+											</tr>
+											<tr>
+												<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof:</label><span><?php echo $booking_customers_adult['id_proof']; ?></span></td>
+												<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof Number:</label><span><?php echo $booking_customers_adult['id_proof_number']; ?></span></td>
+											</tr>
+											<tr>
+												<td colspan="2"><label style="font-weight: bold; padding-right: 15px;">ID Proof Photo:</label><img src="<?php echo $proof_file; ?>" style="width: 100px;display: block;"></td>
+											</tr>
+
+										<?php $i++; } } ?>
+
+										<tr>
+											<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+										</tr>
+
+										<?php
+
+										$safari_booking_customers_table = $wpdb->prefix . 'safari_booking_customers';
+			
+										$booking_customers = $wpdb->get_results( "
+											SELECT * FROM 
+												$safari_booking_customers_table 
+											WHERE 
+												booking_id = '".$booking['id']."'
+											AND 
+												person_type = 'child' 
+										",ARRAY_A );
+
+										if( !empty( $booking_customers ) ){
+
+											$i = 1;
+
+											foreach ( $booking_customers as $key => $booking_customers_child ) { ?>
+
+											<tr>
+												<td colspan="2" style="padding-bottom: 20px;" ><strong>Child Details</strong></td>
+											</tr>
+											<tr>
+												<td height="25"><span style="font-weight: bold; padding-right: 15px;"><?php echo $i; ?></span><span>Child</span></td>
+												<td height="25"><label style="font-weight: bold padding-right: 15px;"><?php echo $booking_customers_child['name']; ?></label><span></span></td>
+											</tr>
+											<tr>
+												<td height=25><label style="font-weight: bold; padding-right: 15px;">Age:</label><span><?php echo $booking_customers_child['age']; ?></span></td>
+												<td height=25><label style="font-weight: bold; padding-right: 15px;">Gender:</label><span><?php echo $booking_customers_child['gender']; ?></span></td>
+											</tr>
+											<tr>
+												<td height=25><label style="font-weight: bold; padding-right: 15px;">Nationality:</label><span><?php echo $booking_customers_child['nationality']; ?></span></td>
+												<td height=25><label style="font-weight: bold; padding-right: 15px;">Select State:</label><span><?php echo $booking_customers_child['state']; ?></span></td>
+											</tr>
+											<tr>
+												<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof:</label><span><?php echo $booking_customers_child['id_proof']; ?></span></td>
+												<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof Number:</label><span><?php echo $booking_customers_child['id_proof_number']; ?></span></td>
+											</tr>
+
+										<?php $i++; } } ?>
+
+										<tr>
+											<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+										</tr>
+
+										<tr>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Total:</label></td>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">₹<?php echo $booking['amount']; ?></label></td>
+										</tr>
+
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<?php
+
+				$html = ob_get_clean();
+
 			}
+	    }  
 
-	    } ?>
-
-	    <?php $html = ob_get_clean();
-
+	    return $html;	
 	}
-
 }
 new SB_Shortcodes();	
 ?>
