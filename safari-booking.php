@@ -103,6 +103,9 @@ class Safari_Booking{
 		include_once ('public/class-sb-shortcodes.php');
 		include_once ('public/class-sb-ajax.php');
 
+		// include_once ('admin/class-sb-admin.php');
+		// include_once ('admin/class-sb-booking-list.php');
+		// include_once ('admin/class-sb-settings.php');
 		if( is_admin() ){
 			include_once ('admin/class-settings-api.php');
 			include_once ('admin/class-safari-settings.php');
@@ -135,6 +138,10 @@ class Safari_Booking{
 		add_menu_page('Safari Booking', 'Safari Booking', 'manage_options', 'safari-booking', array( $this, 'safari_booking_list' ) );
 	}
 
+	public function safari_settings(){
+		
+	}
+
 	public function safari_booking_list(){
 		
 		include_once ('admin/class-safari-booking-list.php');
@@ -157,6 +164,7 @@ class Safari_Booking{
 	    wp_register_style( 'jquery-ui', 'https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css' );
 	    wp_enqueue_style( 'jquery-ui' );  
 
+		//wp_enqueue_style( 'bootstrap-css', SB_PLUGIN_URL.'/assets/css/bootstrap.min.css', false, time() );
 		wp_enqueue_style( 'safari-booking-css', SB_PLUGIN_URL.'/assets/css/safari-booking.css', false, time() );
 		wp_enqueue_style( 'waitMe-min-css', SB_PLUGIN_URL.'/assets/css/waitMe.min.css', false, time() );
 
@@ -180,6 +188,7 @@ class Safari_Booking{
 
 	public function safari_booking_enqueue_styles_admin() { 
 
+		//wp_enqueue_style( 'bootstrap-css', SB_PLUGIN_URL.'/assets/css/bootstrap.min.css', false, time() );
 		wp_enqueue_style( 'safari-booking-admin-css', SB_PLUGIN_URL.'/assets/css/safari-booking-admin.css', false, time() );
 		wp_enqueue_style( 'waitMe-min-css', SB_PLUGIN_URL.'/assets/css/waitMe.min.css', false, time() );
 

@@ -971,32 +971,34 @@ class SB_Shortcodes{
 			    ob_start(); 
 
 				?>
-				<table cellspacing="0" cellpadding="0" width="100%" style="margin: 0px auto; font-family: sans-serif; font-size: 15px; max-width: 580px;">
+				<table class="thank-you" cellspacing="0" cellpadding="0" width="100%" style="margin: 0px auto; font-family: sans-serif; font-size: 15px; max-width: 580px;">
 					<tbody>
 						<!-- <tr>
 							<td cellspacing="0" align="center"><a href="#" ><img src="logo.png" style="margin-bottom: -3px;" ></a></td>
 						</tr> -->
 						<tr>
-							<td>
-								<table align="center" cellspacing="0" width="100%" style="background: #E09900; padding: 15px; border-radius: 15px 15px 0px 0px;" >
-									<tr>
-										<td align="center" style="color:#ffffff; font-size: 18px; " >Booking Details</td>
-									</tr>
+							<td style="padding: 0; border: none!important; ">
+								<table align="center" cellspacing="0" width="100%" style="background: #E09900; padding: 15px; border-radius: 15px 15px 0px 0px; margin: 0; border: none!important;" >
+									<thead>
+										<tr>
+											<td align="center" style="color:#ffffff; font-size: 18px; " >Booking Details</td>
+										</tr>
+									</thead>
 								</table>
 								
 							</td>
 						</tr>
 						<tr>
-							<td>
+							<td style="padding: 0; ">
 								<table width="100%" style="background: #ffffff; padding: 15px; border: 1px solid #efefef; font-size: 13px;" >
 									<tbody>
 										<tr>
 											<td height=25><label style="font-weight: bold; padding-right: 15px;">Booking Code</label></td>
 											<td height=25><label style="font-weight: bold; padding-right: 15px;"><?php echo $booking['booking_code']; ?></label></td>
 										</tr>
-										<tr>
-											<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
-										</tr>
+										<!-- <tr>
+											<td colspan="2" style="padding:0px;" ><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 0px; margin-top: 0px;"></td>
+										</tr> -->
 										<tr>
 											<td height="25"><label style="font-weight: bold; padding-right: 15px;">Booking Date:</label> <value><?php echo date( 'd-m-Y', strtotime( $booking['booking_date'] ) ); ?></value></td>
 											<td height="25"><label style="font-weight: bold; padding-right: 15px;">Booking Timing:</label> <value><?php echo $booking['booking_time']; ?></value></td>
@@ -1006,20 +1008,20 @@ class SB_Shortcodes{
 											<td height="25"><label style="font-weight: bold; padding-right: 15px;">No. of Child:</label> <value><?php echo $booking['no_of_child']; ?></value></td>
 										</tr>
 										<tr>
-											<td height="25"><label style="font-weight: bold; padding-right: 15px;">Name:</label> <value><?php echo $booking['name']; ?></value></td>
+											<td colspan="2" height="25"><label style="font-weight: bold; padding-right: 15px;">Name:</label> <value><?php echo $booking['name']; ?></value></td>
 										</tr>
 										<tr>
-											<td height="25"><label style="font-weight: bold; padding-right: 15px;">Email:</label> <value><?php echo $booking['email']; ?></value></td>
+											<td colspan="2" height="25"><label style="font-weight: bold; padding-right: 15px;">Email:</label> <value><?php echo $booking['email']; ?></value></td>
 										</tr>
 										<tr>
-											<td height="25"><label style="font-weight: bold; padding-right: 15px;">Mobile Number:</label> <value><?php echo $booking['mobile']; ?></value></td>
+											<td colspan="2" height="25"><label style="font-weight: bold; padding-right: 15px;">Mobile Number:</label> <value><?php echo $booking['mobile']; ?></value></td>
 										</tr>
 										<tr>
-											<td height="25"><label style="font-weight: bold; padding-right: 15px;">Full Address:</label> <value><?php echo $booking['address']; ?></value></td>
+											<td colspan="2" height="25"><label style="font-weight: bold; padding-right: 15px;">Full Address:</label> <value><?php echo $booking['address']; ?></value></td>
 										</tr>
-										<tr>
-											<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
-										</tr>
+										<!-- <tr>
+											<td colspan="2" style="padding:0px;" ><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 0px; margin-top: 0px;"></td>
+										</tr> -->
 										
 										<?php
 
@@ -1067,9 +1069,9 @@ class SB_Shortcodes{
 
 										<?php $i++; } } ?>
 
-										<tr>
-											<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
-										</tr>
+										<!-- <tr>
+											<td colspan="2" style="padding:0px;"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 0px; margin-top: 0px;"></td>
+										</tr> -->
 
 										<?php
 
@@ -1113,7 +1115,7 @@ class SB_Shortcodes{
 										<?php $i++; } } ?>
 
 										<tr>
-											<td colspan="2"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 15px; margin-top: 15px;"></td>
+											<td colspan="2" style="padding:0px;"><hr style="border: 1px solid #efefef!important; border-width: 1px 0 0 0!important;padding-top: 0px; margin-top: 0px;"></td>
 										</tr>
 
 										<tr>

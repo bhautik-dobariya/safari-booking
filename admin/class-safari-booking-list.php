@@ -361,26 +361,11 @@ class Safari_Booking_List extends WP_List_Table {
          */
 
 		$safari_booking_table = $wpdb->prefix . 'safari_booking';
+        
+        $orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : 'id'; //If no sort, default to booking_code
+        $order = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'desc'; //If no order, default to asc
 
-        $data = $wpdb->get_results( "SELECT * FROM $safari_booking_table", ARRAY_A );
-                
-        
-        /**
-         * This checks for sorting input and sorts the data in our array accordingly.
-         * 
-         * In a real-world situation involving a database, you would probably want 
-         * to handle sorting by passing the 'orderby' and 'order' values directly 
-         * to a custom query. The returned data will be pre-sorted, and this array
-         * sorting technique would be unnecessary.
-         */
-        function usort_reorder($a,$b){
-            $orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : 'id'; //If no sort, default to booking_code
-            $order = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'desc'; //If no order, default to asc
-            $result = strcmp($a[$orderby], $b[$orderby]); //Determine sort order
-            return ($order==='asc') ? $result : -$result; //Send final sort direction to usort
-        }
-        usort($data, 'usort_reorder');
-        
+        $data = $wpdb->get_results( "SELECT * FROM $safari_booking_table ORDER BY $orderby $order", ARRAY_A );
         
         /***********************************************************************
          * ---------------------------------------------------------------------

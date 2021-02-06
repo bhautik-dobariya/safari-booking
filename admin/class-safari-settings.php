@@ -104,6 +104,15 @@ class WeDevs_Settings_API_Test {
                     'type'    => 'pages',
                 ),
                 array(
+                    'name'              => 'admin_email',
+                    'label'             => __( 'Admin email for recieve booking email', 'wedevs' ),
+                    'desc'              => __( '', 'wedevs' ),
+                    'placeholder'       => __( 'Admin email address', 'wedevs' ),
+                    'type'              => 'text',
+                    'default'           => '',
+                    'sanitize_callback' => 'sanitize_text_field'
+                ),
+                array(
                     'name'    => 'setup',
                     'label'   => __( 'Setup', 'wedevs' ),
                     'desc'        => __( '

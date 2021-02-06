@@ -20,6 +20,8 @@ class SB_Ajax{
 
 		$safari_booking_table = $wpdb->prefix . 'safari_booking';
 		
+		//echo date('Y-m-d',strtotime($_POST['date'])); die;
+
 		$booking = $wpdb->get_row( "
 			SELECT * FROM 
 				$safari_booking_table 
@@ -35,6 +37,16 @@ class SB_Ajax{
 			wp_send_json_error(array(
 				'message' => __( 'Sorry, the booking date or timing is not available. please try a different date or time.', 'safari-booking' )
 			));
+		}
+
+		$time = explode('to',$_POST['time']);
+
+		//echo date('Y-m-d H:i a', current_time( 'timestamp', 0 )).' >= '.date('Y-m-d H:i a', strtotime( '-1 hour', strtotime( date( 'Y-m-d', strtotime( $_POST['date'] ) ).' '.$time[0] ) ) );
+
+		if ( current_time( 'timestamp', 0 ) >= strtotime( '-1 hour', strtotime( date( 'Y-m-d', strtotime( $_POST['date'] ) ).' '.$time[0] ) ) ) {
+		 	wp_send_json_error(array(
+				'message' => __( 'Sorry, you can only book 1 hour before the time you select.', 'safari-booking' )
+			));  
 		}
 		
 		wp_send_json_success(array(
@@ -194,8 +206,8 @@ class SB_Ajax{
 
 			$_POST['booking_code'] = $booking_code;
 
-			// $this->send_mail_to_customer( $_POST );
-			// $this->send_mail_to_admin( $_POST );
+			$this->send_mail_to_customer( $_POST );
+			$this->send_mail_to_admin( $_POST );
 
 			wp_send_json_success( array(
 				'redirect' => $_POST['thankyou_url'].'?booking_code='.$booking_code,
@@ -237,7 +249,7 @@ class SB_Ajax{
 		add_filter( 'wp_mail_content_type', array( $this, 'girlionsafaribooking_set_html_mail_content_type' ) );
 
 		$to = $data['email'];
-		$subject = '';
+		$subject = 'Thank you for Booking on girlionsafaribooking - '.$data['booking_code'];
 		$headers[] = 'From: girlionsafaribooking <girlionsafaribooking.com/>';
 
 		ob_start(); 
@@ -413,7 +425,7 @@ class SB_Ajax{
 
 		$message = ob_get_clean();
 
-		wp_mail( $to, $subject, $message, $headers, array( '' ) );
+		wp_mail( $to, $subject, $message, $headers );
 
 		remove_filter( 'wp_mail_content_type', array( $this, 'girlionsafaribooking_set_html_mail_content_type' ) );
 
@@ -427,8 +439,10 @@ class SB_Ajax{
 
 		add_filter( 'wp_mail_content_type', array( $this, 'girlionsafaribooking_set_html_mail_content_type' ) );
 
-		$to = 'hosting.miracletechnolabs@gmail.com';
-		$subject = '';
+		$safari_booking_basic_settings = get_option( 'safari_booking_basic_settings' );
+
+		$to = $safari_booking_basic_settings['admin_email'];
+		$subject = 'New Booking received on girlionsafaribooking - '.$data['booking_code'];
 		$headers[] = 'From: girlionsafaribooking <girlionsafaribooking.com/>';
 
 		ob_start(); 
@@ -439,7 +453,7 @@ class SB_Ajax{
 			SELECT * FROM 
 				$safari_booking_table 
 			WHERE 
-				booking_code = '".$data['booking_code']."' 
+				booking_code = '".$data['booking_code']."'
 		",ARRAY_A );
 		
 		if( !empty( $booking ) ){ ?>
@@ -604,7 +618,7 @@ class SB_Ajax{
 
 		$message = ob_get_clean();
 
-		wp_mail( $to, $subject, $message, $headers, array( '' ) );
+		wp_mail( $to, $subject, $message, $headers );
 
 		remove_filter( 'wp_mail_content_type', array( $this, 'girlionsafaribooking_set_html_mail_content_type' ) );
 
