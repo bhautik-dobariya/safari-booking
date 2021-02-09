@@ -154,6 +154,36 @@ class SB_Shortcodes{
 	    ), $atts, 'payment_form' );
 	 	
 	    ob_start();
+
+	    if( !isset( $_GET['date'] ) || $_GET['date'] == '' ){
+	    	return "Please select date to proceed further to booking.";
+	    }
+
+	    if( !isset( $_GET['time'] ) || $_GET['time'] == '' ){
+	    	return "Please select time to proceed further to booking.";
+	    }
+
+	    if( isset( $_GET['date'] ) &&  $_GET['date'] != '' ){
+
+	    	$today_date = date( 'Y-m-d' );
+	    	$booking_date = date( 'Y-m-d', strtotime( $_GET['date'] ) );
+
+	    	if( $booking_date < $today_date ){
+	    		return "The booking date must be greater than today's date.";
+	    	}
+
+	    }
+
+	    if( !isset( $_GET['adult'] ) || $_GET['adult'] == '' ){
+	    	return "Please select 1 adult to proceed further to booking.";
+	    }
+
+	    $total_person = $_GET['adult'] + $_GET['child'];
+
+	    if( $total_person > 7 ){
+	    	return "Sorry, you can not select more than 7 passengers.";	
+	    }
+
 	    ?>
 	    <div class="booking">
 		    <div class="container">
@@ -313,7 +343,7 @@ class SB_Shortcodes{
 				                                                    <option value="Uttarakhand">Uttarakhand</option>
 				                                                    <option value="West Bengal">West Bengal</option>
 				                                                </select>
-				                                                <select style="display: none;" class="form-control country_select" name="adults[<?php echo $adult; ?>][country]">
+				                                                <select style="display: none;" class="form-control country_select" name="adults[<?php echo $adult; ?>][country]" required="">
 				                                                    <option value="">Select Country</option>
 				                                                    <option value="Afghanistan">Afghanistan</option>
 				                                                    <option value="Albania">Albania</option>
@@ -558,7 +588,7 @@ class SB_Shortcodes{
 				                                            </div>
 				                                        </div>
 				                                        <div class="form-group adult-id">
-				                                            <select class="form-control nationality_div" name="adults[<?php echo $adult; ?>][id_proof]" required="">
+				                                            <select class="form-control proof_select" name="adults[<?php echo $adult; ?>][id_proof]" required="">
 				                                                <option value="">ID Proof</option>
 				                                                <option value="Aadhar Card">Aadhar Card</option>
 				                                                <option value="Voter ID">Voter ID</option>
@@ -649,7 +679,7 @@ class SB_Shortcodes{
 				                                                        <option value="Uttarakhand">Uttarakhand</option>
 				                                                        <option value="West Bengal">West Bengal</option>
 				                                                    </select>
-				                                                    <select style="display: none;" class="form-control country_select" name="childs[<?php echo $child; ?>][country]">
+				                                                    <select style="display: none;" class="form-control country_select" name="childs[<?php echo $child; ?>][country]" required="">
 				                                                        <option value="">Select Country</option>
 				                                                        <option value="Afghanistan">Afghanistan</option>
 				                                                        <option value="Albania">Albania</option>
@@ -894,7 +924,7 @@ class SB_Shortcodes{
 				                                                </div>
 				                                            </div>
 				                                            <div class="form-group adult-id">
-				                                                <select class="form-control nationality_div" name="childs[<?php echo $child; ?>][id_proof]" required="">
+				                                                <select class="form-control proof_select" name="childs[<?php echo $child; ?>][id_proof]" required="">
 				                                                    <option value="">ID Proof</option>
 				                                                    <option value="Aadhar Card">Aadhar Card</option>
 				                                                    <option value="Voter ID">Voter ID</option>

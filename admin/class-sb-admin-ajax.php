@@ -61,7 +61,11 @@ class SB_Admin_Ajax{
 									</tr>
 									<tr>
 										<td height=25><label style="font-weight: bold; padding-right: 15px;">Nationality:</label><span><?php echo $booking_customers_adult['nationality']; ?></span></td>
-										<td height=25><label style="font-weight: bold; padding-right: 15px;">Select State:</label><span><?php echo $booking_customers_adult['state']; ?></span></td>
+										<?php if( $booking_customers_adult['nationality'] == 'Indian' ){ ?>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">State:</label><span><?php echo $booking_customers_adult['state']; ?></span></td>
+										<?php }else{ ?>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Country:</label><span><?php echo $booking_customers_adult['country']; ?></span></td>
+										<?php } ?>
 									</tr>
 									<tr>
 										<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof:</label><span><?php echo $booking_customers_adult['id_proof']; ?></span></td>
@@ -109,7 +113,11 @@ class SB_Admin_Ajax{
 									</tr>
 									<tr>
 										<td height=25><label style="font-weight: bold; padding-right: 15px;">Nationality:</label><span><?php echo $booking_customers_child['nationality']; ?></span></td>
-										<td height=25><label style="font-weight: bold; padding-right: 15px;">Select State:</label><span><?php echo $booking_customers_child['state']; ?></span></td>
+										<?php if( $booking_customers_child['nationality'] == 'Indian' ){ ?>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">State:</label><span><?php echo $booking_customers_child['state']; ?></span></td>
+										<?php }else{ ?>
+											<td height=25><label style="font-weight: bold; padding-right: 15px;">Country:</label><span><?php echo $booking_customers_child['country']; ?></span></td>
+										<?php } ?>
 									</tr>
 									<tr>
 										<td height=25><label style="font-weight: bold; padding-right: 15px;">ID Proof:</label><span><?php echo $booking_customers_child['id_proof']; ?></span></td>

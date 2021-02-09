@@ -15,9 +15,21 @@
 
 		$(document).on('click', '#gir-jungle-trail-submit', function (e) {
 
+			$('#gir-jungle-trail-tab').find('.avialbility-error').text('').hide();
+
 			e.preventDefault();
 
 			$this = $(this);
+
+			var adult = $this.closest('form').find('#giradult').val();
+			var child = $this.closest('form').find('#girchild').val();
+			
+			var total = parseInt( adult ) + parseInt( child );
+			
+			if( total > 7 ){
+				$('#gir-jungle-trail-tab').find('.avialbility-error').text('Sorry, you can not select more than 7 passengers.').show();
+				return false;
+			}
 
 			if($( "#gir-jungle-trail-form" ).valid()){
 				$( "#gir-jungle-trail-form" ).submit();
@@ -29,9 +41,21 @@
 
 		$(document).on('click', '#devalia-park-submit', function (e) {
 
+			$('#devalia-park-tab').find('.avialbility-error').text('').hide();
+
 			e.preventDefault();
 
 			$this = $(this);
+
+			var adult = $this.closest('form').find('#devadult').val();
+			var child = $this.closest('form').find('#devchild').val();
+			
+			var total = parseInt( adult ) + parseInt( child );
+			
+			if( total > 7 ){
+				$('#devalia-park-tab').find('.avialbility-error').text('Sorry, you can not select more than 7 passengers.').show();
+				return false;
+			}
 
 			if($( "#devalia-park-form" ).valid()){
 				$( "#devalia-park-form" ).submit();
@@ -182,6 +206,22 @@
 			        $this.closest('#devalia-park-form').waitMe('hide');
 	          	}
 	      	});
+
+		});
+
+		$( document ).on('change','.nationality_select',function(){
+
+			if( $(this).val() == 'Foreigner' ){
+				$(this).closest('.form-group').find('.state_select').hide();
+				$(this).closest('.form-group').find('.country_select').show();
+				$(this).closest('.form-group').next().find('.proof_select').val("Passport").attr("selected","selected");
+				$(this).closest('.form-group').next().find('.proof_select').find('option:not(:selected)').attr("disabled","disabled");
+			}else{
+				$(this).closest('.form-group').find('.state_select').show();
+				$(this).closest('.form-group').find('.country_select').hide();
+				$(this).closest('.form-group').next().find('.proof_select').val("").attr("selected","selected");
+				$(this).closest('.form-group').next().find('.proof_select').find('option').removeAttr("disabled");
+			}
 
 		});
 
