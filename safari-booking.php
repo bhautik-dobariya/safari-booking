@@ -177,7 +177,8 @@ class Safari_Booking{
 		// Localize the script with new data
 		$safari_booking = array(
 		    'ajaxurl' => admin_url('admin-ajax.php'),
-		    'safari_booking_basic_settings' => get_option( 'safari_booking_basic_settings' )
+		    'safari_booking_basic_settings' => get_option( 'safari_booking_basic_settings' ),
+		    'person_capacity' => apply_filters( 'safari_booking_total_person_capacity', 7 ),
 		);
 		wp_localize_script( 'safari-booking-js', 'safari_booking', $safari_booking );
 		 

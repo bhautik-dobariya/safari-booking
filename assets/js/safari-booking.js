@@ -26,8 +26,8 @@
 			
 			var total = parseInt( adult ) + parseInt( child );
 			
-			if( total > 7 ){
-				$('#gir-jungle-trail-tab').find('.avialbility-error').text('Sorry, you can not select more than 7 passengers.').show();
+			if( total > safari_booking.person_capacity ){
+				$('#gir-jungle-trail-tab').find('.avialbility-error').text('Sorry, you can not select more than '+safari_booking.person_capacity+' passengers.').show();
 				return false;
 			}
 
@@ -52,8 +52,8 @@
 			
 			var total = parseInt( adult ) + parseInt( child );
 			
-			if( total > 7 ){
-				$('#devalia-park-tab').find('.avialbility-error').text('Sorry, you can not select more than 7 passengers.').show();
+			if( total > safari_booking.person_capacity ){
+				$('#devalia-park-tab').find('.avialbility-error').text('Sorry, you can not select more than '+safari_booking.person_capacity+' passengers.').show();
 				return false;
 			}
 

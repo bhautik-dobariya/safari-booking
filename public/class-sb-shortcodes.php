@@ -180,8 +180,8 @@ class SB_Shortcodes{
 
 	    $total_person = $_GET['adult'] + $_GET['child'];
 
-	    if( $total_person > 7 ){
-	    	return "Sorry, you can not select more than 7 passengers.";	
+	    if( $total_person > apply_filters( 'safari_booking_total_person_capacity', 7 ) ){
+	    	return "Sorry, you can not select more than ".apply_filters( 'safari_booking_total_person_capacity', 7 )." passengers.";	
 	    }
 
 	    ?>
