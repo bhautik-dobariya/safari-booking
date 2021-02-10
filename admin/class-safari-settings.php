@@ -68,8 +68,20 @@ class WeDevs_Settings_API_Test {
                     'sanitize_callback' => 'sanitize_text_field'
                 ),
                 array(
-                    'name'              => 'adult_price',
-                    'label'             => __( 'Adult Price', 'wedevs' ),
+                    'name'              => 'adult_price_indian',
+                    'label'             => __( 'Adult Price (Indian)', 'wedevs' ),
+                    'desc'              => __( 'Fixed price for number any of adults', 'wedevs' ),
+                    'placeholder'       => __( '0', 'wedevs' ),
+                    'min'               => 0,
+                    'max'               => 1000000,
+                    'step'              => '0.01',
+                    'type'              => 'number',
+                    'default'           => '0',
+                    'sanitize_callback' => 'floatval'
+                ),
+                array(
+                    'name'              => 'adult_price_foreigner',
+                    'label'             => __( 'Adult Price (Foreigner)', 'wedevs' ),
                     'desc'              => __( 'Fixed price for number any of adults', 'wedevs' ),
                     'placeholder'       => __( '0', 'wedevs' ),
                     'min'               => 0,
@@ -117,8 +129,10 @@ class WeDevs_Settings_API_Test {
                     'label'   => __( 'Setup', 'wedevs' ),
                     'desc'        => __( '
                         <strong>This 3 shortcode displayed below are available in this plugin to user proper functionality of safari booking process.</strong>
-                        <div style="margin: 10px 0;"><code>[booking_form]</code> This shorcode will display basic booking fields</div>
-                        <div style="margin: 10px 0;"><code>[payment_form]</code> This shorcode will display basic booking info and fields for adults and child</div>
+                        <div style="margin: 10px 0;"><code>[booking_form]</code> This shorcode will display basic booking fields.</div>
+                        <div style="margin: 10px 0;"><code>[booking_form_gir_jungle]</code> This shorcode will display basic booking fields for gir jungle.</div>
+                        <div style="margin: 10px 0;"><code>[booking_form_devalia_park]</code> This shorcode will display basic booking fields for devalia park.</div>
+                        <div style="margin: 10px 0;"><code>[payment_form]</code> This shorcode will display basic booking info and fields for adults and child.</div>
                         <div style="margin: 10px 0;"><code>[booking_thank_you]</code> This shorcode will display booking information after customer booking.</div>
                     ', 'wedevs' ),
                     'type'        => 'html'

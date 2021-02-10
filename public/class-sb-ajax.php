@@ -49,8 +49,30 @@ class SB_Ajax{
 			));  
 		}
 		
+		$nationality = array();
+
+		if( !empty( $_POST['adults'] ) ){
+			foreach ( $_POST['adults'] as $key => $adult ) {
+				$nationality[] = $adult['nationality'];
+			}
+		}
+
+		if( !empty( $_POST['childs'] ) ){
+			foreach ( $_POST['childs'] as $key => $child ) {
+				$nationality[] = $child['nationality'];
+			}
+		}
+
+		$price = 0;
+
+		if( in_array( 'Foreigner', $nationality ) ){
+			$price = calculate_price( $_POST['adult'], $_POST['child'], 'foreigner' );
+		}else{
+			$price = calculate_price( $_POST['adult'], $_POST['child'], 'indian' );
+		}
+
 		wp_send_json_success(array(
-			'total_amount' => calculate_price( $_POST['adult'], $_POST['child'] )
+			'total_amount' => $price
 		));
 
 	}

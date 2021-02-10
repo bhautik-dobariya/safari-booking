@@ -6,6 +6,8 @@ class SB_Shortcodes{
 	
 	function __construct(){
 		add_shortcode( 'booking_form', array( $this, 'booking_form' ) );
+		add_shortcode( 'booking_form_gir_jungle', array( $this, 'booking_form_gir_jungle' ) );
+		add_shortcode( 'booking_form_devalia_park', array( $this, 'booking_form_devalia_park' ) );
 		add_shortcode( 'payment_form', array( $this, 'payment_form' ) );
 		add_shortcode( 'booking_thank_you', array( $this, 'booking_thank_you' ) );
 	}
@@ -146,6 +148,164 @@ class SB_Shortcodes{
 	    return $html;
 	}
 
+	public function booking_form_gir_jungle( $atts ) {
+		
+		$safari_booking_basic_settings = get_option( 'safari_booking_basic_settings' );
+		$payment_form_url = get_permalink( $safari_booking_basic_settings['payment_page'] );
+	    $atts = shortcode_atts( array(
+	        '' => '',
+	    ), $atts, 'booking_form_gir_jungle' );
+	 	
+	    ob_start();
+	    ?>
+	    <div class="Jungle-tab" style="display: none;">
+	      	<ul class="nav nav-tabs tigertabs">
+	        	<li class="active" style="width: 100% !important;">
+	          		<a href="#gir-jungle-trail-tab">Gir Jungle Trail Safari Booking</a>
+	        	</li>
+	      	</ul>
+	      	<!-- Tab panes -->
+	      	<div class="tab-content tab-bg">
+	        	<div id="gir-jungle-trail-tab" class="container tab-bg tab-pane active in">
+	        		<div class="avialbility-error" style="color: red;display: none;margin-bottom: 30px !important;"></div>
+	          		<form method="GET" action="<?php echo $payment_form_url; ?>" id="gir-jungle-trail-form" autocomplete="off" _lpchecked="1">
+	            		<div class="form-group row">
+	              			<label for="colFormLabelLg" class="col-sm-3">Date :</label>
+	          				<div class="col-sm-9">
+	            				<input type="text" class="form-control" name="date" id="gir-datepicker" value="<?php echo date('d-m-Y'); ?>" required="">
+	          				</div>
+	            		</div>
+	            		<div class="form-group row">
+	              			<label for="colFormLabelLg" class="col-sm-3">Timings :</label>
+	              			<div class="col-sm-9">
+	                			<select class="form-control" name="time" id="girtime" required="">
+	                  				<option value="">---Please Select---</option>
+	                  				<option value="06:45 am to 09:45 am">06:45 am to 09:45 am</option>
+	                  				<option value="8:30 am to 11:30 am">8:30 am to 11:30 am</option>
+	                  				<option value="3:00 pm to 6:00 pm">3:00 pm to 6:00 pm</option>
+	                			</select>
+	              			</div>
+	            		</div>
+	            		<div class="form-group row">
+	              			<label for="colFormLabelLg" class="col-sm-3">Adult :</label>
+	              			<div class="col-sm-9">
+		                		<select class="form-control" name="adult" id="giradult" required="">
+		                  			<option value="">---Please Select---</option>
+		                  			<option value="1">1</option>
+		                  			<option value="2">2</option>
+		                  			<option value="3">3</option>
+		                  			<option value="4">4</option>
+		                  			<option value="5">5</option>
+		                  			<option value="6">6</option>
+		                		</select>
+	              			</div>
+	            		</div>
+	            		<div class="form-group row">
+	              			<label for="colFormLabelLg" class="col-sm-3">Child :</label>
+	              			<div class="col-sm-9">
+		                		<select class="form-control" name="child" id="girchild">
+				              		<option value="">---Please Select---</option>
+				              		<option value="1">1</option>
+				              		<option value="2">2</option>
+				              		<option value="3">3</option>
+				              		<option value="4">4</option>
+				              		<option value="5">5</option>
+				              		<option value="6">6</option>
+		                		</select>
+		              		</div>
+	            		</div>
+	            		<button type="submit" class="btn btn-primary my-1 submit-dev-form" id="gir-jungle-trail-submit">Book Now</button>
+	            		<input type="hidden" class="booking-type" name="type" value="gir-jungle-trail">
+	          		</form>
+	        	</div>
+	      	</div>
+	    </div>
+	    <?php
+	    $html = ob_get_clean();
+	    return $html;
+	}
+
+	public function booking_form_devalia_park( $atts ) {
+		
+		$safari_booking_basic_settings = get_option( 'safari_booking_basic_settings' );
+		$payment_form_url = get_permalink( $safari_booking_basic_settings['payment_page'] );
+	    $atts = shortcode_atts( array(
+	        '' => '',
+	    ), $atts, 'booking_form_devalia_park' );
+	 	
+	    ob_start();
+	    ?>
+	    <div class="Jungle-tab" style="display: none;">
+	      	<ul class="nav nav-tabs tigertabs">
+	        	<li class="active" style="width: 100% !important;">
+	          		<a href="#devalia-park-tab">Devalia Park Safari Booking</a>
+	        	</li>
+	      	</ul>
+	      	<!-- Tab panes -->
+	      	<div class="tab-content tab-bg">
+	        	<div id="devalia-park-tab" class="container tab-bg tab-pane fade">
+		        	<div class="avialbility-error" style="color: red;display: none;margin-bottom: 30px !important;"></div>
+		          	<form id="devalia-park-form" method="GET" action="<?php echo $payment_form_url; ?>"> 
+		            	<div class="form-group row">
+		              		<label for="colFormLabelLg" class="col-sm-3">Date :</label>
+		              		<div class="col-sm-9">
+				                <input type="text" class="form-control" name="date" id="dev-datepicker" value="<?php echo date('d-m-Y'); ?>" required="">
+		              		</div>
+		            	</div>
+		            	<div class="form-group row">
+		              		<label for="colFormLabelLg" class="col-sm-3">Timings :</label>
+		              		<div class="col-sm-9">
+				                <select class="form-control" name="time" id="devtime" required="">
+				                  	<option value="">---Please Select---</option>
+				                  	<option value="7:00 am to 7:55 am">7:00 am to 7:55 am</option>
+				                  	<option value="8:00 am to 8:55 am">8:00 am to 8:55 am</option>
+				                  	<option value="9:00 am to 9:55 am">9:00 am to 9:55 am</option>
+				                  	<option value="10:00 am to 10:55 am">10:00 am to 10:55 am</option>
+				                  	<option value="3:00 pm to 3:55 pm">3:00 pm to 3:55 pm</option>
+				                  	<option value="4:00 pm to 4:55 pm">4:00 pm to 4:55 pm</option>
+				                  	<option value="5:00 pm to 5:55 pm">5:00 pm to 5:55 pm</option>
+				                </select>
+		              		</div>
+		            	</div>
+		            	<div class="form-group row">
+		              		<label for="colFormLabelLg" class="col-sm-3">Adult :</label>
+		              		<div class="col-sm-9">
+				                <select class="form-control" name="adult" id="devadult" required="">
+				                  	<option value="">---Please Select---</option>
+				                  	<option value="1">1</option>
+				                  	<option value="2">2</option>
+				                  	<option value="3">3</option>
+				                  	<option value="4">4</option>
+				                  	<option value="5">5</option>
+				                  	<option value="6">6</option>
+				                </select>
+		              		</div>
+		            	</div>
+		            	<div class="form-group row">
+		              		<label for="colFormLabelLg" class="col-sm-3">Child :</label>
+		              		<div class="col-sm-9">
+				                <select class="form-control" name="child" id="devchild">
+				                  	<option value="0">---Please Select---</option>
+				                  	<option value="1">1</option>
+				                  	<option value="2">2</option>
+				                  	<option value="3">3</option>
+				                  	<option value="4">4</option>
+				                  	<option value="5">5</option>
+				                  	<option value="6">6</option>
+				                </select>
+		              		</div>
+		            	</div>
+		            	<button type="submit" class="btn btn-primary my-1 submit-dev-form" id="devalia-park-submit">Book Now</button>
+		            	<input type="hidden" class="booking-type" name="type" value="devalia-park">
+		          	</form>
+		        </div>
+	      	</div>
+	    </div>
+	    <?php
+	    $html = ob_get_clean();
+	    return $html;
+	}
+
 	public function payment_form( $atts ) {
 		$safari_booking_basic_settings = get_option( 'safari_booking_basic_settings' );
 		$thank_you_page_url = get_permalink( $safari_booking_basic_settings['thank_you_page'] );
@@ -178,7 +338,7 @@ class SB_Shortcodes{
 	    	return "Please select 1 adult to proceed further to booking.";
 	    }
 
-	    $total_person = $_GET['adult'] + $_GET['child'];
+	    $total_person = (int) $_GET['adult'] + (int) $_GET['child'];
 
 	    if( $total_person > apply_filters( 'safari_booking_total_person_capacity', 7 ) ){
 	    	return "Sorry, you can not select more than ".apply_filters( 'safari_booking_total_person_capacity', 7 )." passengers.";	

@@ -19,7 +19,7 @@
 
 			e.preventDefault();
 
-			$this = $(this);
+			var $this = $(this);
 
 			var adult = $this.closest('form').find('#giradult').val();
 			var child = $this.closest('form').find('#girchild').val();
@@ -45,7 +45,7 @@
 
 			e.preventDefault();
 
-			$this = $(this);
+			var $this = $(this);
 
 			var adult = $this.closest('form').find('#devadult').val();
 			var child = $this.closest('form').find('#devchild').val();
@@ -75,7 +75,7 @@
 
 		$( document ).on('change','#girtime',function(){
 
-			$this = $(this);
+			var $this = $(this);
 
 			if( $this.val() == '' ){
 				return false;
@@ -143,7 +143,7 @@
 
 		$( document ).on('change','#devtime',function(){
 
-			$this = $(this);
+			var $this = $(this);
 
 			if( $this.val() == '' ){
 				return false;
@@ -223,13 +223,50 @@
 				$(this).closest('.form-group').next().find('.proof_select').find('option').removeAttr("disabled");
 			}
 
+			var adult = $('input[name="adult"]').val();
+			var child = $('input[name="child"]').val();
+			var price = 0;
+			
+			var nationality = [];
+
+			$('.nationality_select').each(function(){
+				if( $(this).val() != '' ){
+					nationality.push( $(this).val() );
+				}
+			});
+
+			if( nationality.includes('Foreigner') ){
+				price = calculate_price( adult, child, 'foreigner' );
+			}else{
+				price = calculate_price( adult, child, 'indian' );
+			}
+
+			$('#lblTotal').text('₹'+price);
+			$('#total_amount').val(price);
+
 		});
+
+		function calculate_price( adult = 0, child = 0, nationality = 'indian' ){
+
+			var safari_booking_basic_settings = safari_booking.safari_booking_basic_settings;
+			var price = 0;
+
+			if( nationality == 'indian' ){
+				var adult_price = safari_booking_basic_settings.adult_price_indian;
+				price = parseInt( adult_price ) + ( parseInt( safari_booking_basic_settings.child_price ) * parseInt( child ) );
+			}else{
+				price = safari_booking_basic_settings.adult_price_foreigner;
+			}
+
+			return price;
+
+		}
 
 		$(document).on('click', '#pay-now', function (e) {
 
 			e.preventDefault();
 
-			$this = $(this);
+			var $this = $(this);
 
 			if($( "#payment_form" ).valid()){
 
