@@ -20,6 +20,20 @@ class SB_Ajax{
 
 		$safari_booking_table = $wpdb->prefix . 'safari_booking';
 		
+		$safari_booking_basic_settings = get_option( 'safari_booking_basic_settings' );
+
+		if( $_POST['type'] == 'gir-jungle-trail' ){
+			$time_settings = $safari_booking_basic_settings['gir_jungle_trail_timing'];
+		}else{
+			$time_settings = $safari_booking_basic_settings['devalia_park_timing'];
+		}
+
+		if( !in_array( $_POST['time'], $time_settings ) ){
+			wp_send_json_error(array(
+				'message' => __( 'Sorry, the timing is not available. please try a different time.', 'safari-booking' )
+			));
+		}
+
 		//echo date('Y-m-d',strtotime($_POST['date'])); die;
 
 		$booking = $wpdb->get_row( "

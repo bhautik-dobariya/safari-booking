@@ -125,10 +125,36 @@ class WeDevs_Settings_API_Test {
                     'sanitize_callback' => 'sanitize_text_field'
                 ),
                 array(
+                    'name'              => 'gir_jungle_trail_timing',
+                    'label'             => __( 'Gir jungle trail timing', 'wedevs' ),
+                    'desc'              => __( 'Checked time slot will be available. unchecked will not available.', 'wedevs' ),
+                    'type'              => 'multicheck',
+                    'options'            => array(
+                        '06:45 am to 09:45 am' => '06:45 am to 09:45 am',
+                        '8:30 am to 11:30 am' => '8:30 am to 11:30 am',
+                        '3:00 pm to 6:00 pm' => '3:00 pm to 6:00 pm'
+                    )
+                ),
+                array(
+                    'name'              => 'devalia_park_timing',
+                    'label'             => __( 'Devalia park timing', 'wedevs' ),
+                    'desc'              => __( 'Checked time slot will be available. unchecked will not available.', 'wedevs' ),
+                    'type'              => 'multicheck',
+                    'options'            => array(
+                        '7:00 am to 7:55 am' => '7:00 am to 7:55 am',
+                        '8:00 am to 8:55 am' => '8:00 am to 8:55 am',
+                        '9:00 am to 9:55 am' => '9:00 am to 9:55 am',
+                        '10:00 am to 10:55 am' => '10:00 am to 10:55 am',
+                        '3:00 pm to 3:55 pm' => '3:00 pm to 3:55 pm',
+                        '4:00 pm to 4:55 pm' => '4:00 pm to 4:55 pm',
+                        '5:00 pm to 5:55 pm' => '5:00 pm to 5:55 pm'
+                    )
+                ),
+                array(
                     'name'    => 'setup',
                     'label'   => __( 'Setup', 'wedevs' ),
                     'desc'        => __( '
-                        <strong>This 3 shortcode displayed below are available in this plugin to user proper functionality of safari booking process.</strong>
+                        <strong>This 5 shortcode displayed below are available in this plugin to user proper functionality of safari booking process.</strong>
                         <div style="margin: 10px 0;"><code>[booking_form]</code> This shorcode will display basic booking fields.</div>
                         <div style="margin: 10px 0;"><code>[booking_form_gir_jungle]</code> This shorcode will display basic booking fields for gir jungle.</div>
                         <div style="margin: 10px 0;"><code>[booking_form_devalia_park]</code> This shorcode will display basic booking fields for devalia park.</div>
